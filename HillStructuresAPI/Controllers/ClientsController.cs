@@ -11,10 +11,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using HillStructuresAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 
 namespace HillStructuresAPI.Controllers
 {
+
     [Route("api/Client")]
     public class ClientsController : ControllerBase
     {
@@ -26,6 +28,7 @@ namespace HillStructuresAPI.Controllers
         }
 
         // GET api/clients
+        [EnableCors("AllowAll")]
         [Produces("application/json")]
         [HttpGet("Get")]
         public async Task<IActionResult> Get()
@@ -34,6 +37,75 @@ namespace HillStructuresAPI.Controllers
             {
                 var clients = _context.Client.ToList();
                 return Ok(clients);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("get/{userId}")]
+        public async Task<IActionResult> Get(int userId)
+        {
+            try
+            {
+                var product = _context.Client.SingleOrDefault(p => p.UserID == userId);
+                return Ok(product);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody] Client client)
+        {
+            try
+            {
+                _context.Client.Add(client);
+                _context.SaveChanges();
+                return Ok(client);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] Client client)
+        {
+            try
+            {
+                _context.Entry(client).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                return Ok(client);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+
+            }
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                _context.Remove(_context.Client.Find(id));
+                await _context.SaveChangesAsync();
+                return Ok();
             }
             catch (Exception e)
             {
@@ -66,7 +138,7 @@ namespace HillStructuresAPI.Controllers
 
                 var client = await _context.Client
                     .FirstOrDefaultAsync(m => m.UserID == id);
-                
+
 
                 if (client == null)
                 {
@@ -222,7 +294,7 @@ namespace HillStructuresAPI.Controllers
         {
             return _context.Client.Any(e => e.UserID == id);
         }
-        
+
         // GET: Clients/AddJobs/5
         public async Task<IActionResult> AddJobs(int? id)
         {
@@ -285,4 +357,4 @@ namespace HillStructuresAPI.Controllers
             }             
         }*/
     }
-}
+        }

@@ -27,6 +27,13 @@ namespace HillStructuresAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
 
             services.AddDbContext<HillStructuresContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HillStructuresContext")));
@@ -44,7 +51,10 @@ namespace HillStructuresAPI
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            app.UseCors("AllowAll");
             app.UseMvc();
         }
     }
