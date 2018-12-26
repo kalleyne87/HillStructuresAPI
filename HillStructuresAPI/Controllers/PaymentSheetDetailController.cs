@@ -15,18 +15,18 @@ using HillStructuresAPI.Models;
 
 namespace HillStructuresAPI.Controllers
 {
-    [Route("api/PaymentSheets")]
-    public class PaymentSheetsController : ControllerBase
+    [Route("api/PaymentSheetDetail")]
+    public class PaymentSheetDetailController : ControllerBase
     {
 
-        private readonly HillStructuresContext _context;         
+        private readonly HillStructuresContext _context;           
 
-        public PaymentSheetsController(HillStructuresContext context)
+        public PaymentSheetDetailController(HillStructuresContext context)
         {
-            _context = context;            
+            _context = context;          
         }
 
-        // GET api/PaymentSheets/get
+        // GET api/PaymentSheetDetail/get
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [HttpGet("Get")]
@@ -34,8 +34,8 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var paymentSheets = _context.PaymentSheets.ToList();
-                return Ok(paymentSheets);
+                var paymentSheetDetail = _context.PaymentSheetDetails.ToList();
+                return Ok(paymentSheetDetail);
             }
             catch (Exception e)
             {
@@ -43,16 +43,16 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // GET api/PaymentSheets/get/2
+        // GET api/PaymentSheetDetail/get/2
         [EnableCors("AllowAll")]
         [Produces("application/json")]
-        [HttpGet("Get/{paymentSheetID}")]
-        public async Task<IActionResult> Get(int PaymentSheetID)
+        [HttpGet("Get/{paymentSheetDetailID}")]
+        public async Task<IActionResult> Get(int PaymentSheetDetailID)
         {
             try
             {
-                var paymentSheet = _context.PaymentSheets.SingleOrDefault(p => p.PaymentSheetID == PaymentSheetID);
-                return Ok(paymentSheet);
+                var paymentSheetDetail = _context.PaymentSheetDetails.SingleOrDefault(p => p.PaymentSheetDetailID == PaymentSheetDetailID);
+                return Ok(paymentSheetDetail);
             }
             catch (Exception e)
             {
@@ -60,18 +60,18 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // POST api/PaymentSheets/create
+        // POST api/PaymentSheetDetail/create
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] PaymentSheet paymentSheet)
+        public async Task<IActionResult> Create([FromBody] PaymentSheetDetail paymentSheetDetail)
         {
             try
             {
-                _context.PaymentSheets.Add(paymentSheet);
+                _context.PaymentSheetDetails.Add(paymentSheetDetail);
                 _context.SaveChanges();
-                return Ok(paymentSheet);
+                return Ok(paymentSheetDetail);
             }
             catch (Exception e)
             {
@@ -79,18 +79,18 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // PUT api/PaymentSheet/update
+        // PUT api/PaymentSheetDetail/update
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] PaymentSheet paymentSheet)
+        public async Task<IActionResult> Update([FromBody] PaymentSheetDetail paymentSheetDetail)
         {
             try
             {
-                _context.Entry(paymentSheet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(paymentSheetDetail).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 _context.SaveChanges();
-                return Ok(paymentSheet);
+                return Ok(paymentSheetDetail);
             }
             catch (Exception e)
             {
@@ -99,14 +99,14 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // DELETE api/PaymentSheet/delete/4
+        // DELETE api/PaymentSheetDetail/delete/4
         [EnableCors("AllowAll")]
-        [HttpDelete("Delete/{paymentSheetID}")]
-        public async Task<IActionResult> Delete(int paymentSheetID)
+        [HttpDelete("Delete/{paymentSheetDetailID}")]
+        public async Task<IActionResult> Delete(int paymentSheetDetailID)
         {
             try
             {
-                _context.Remove(_context.PaymentSheets.Find(paymentSheetID));
+                _context.Remove(_context.PaymentSheetDetails.Find(paymentSheetDetailID));
                 await _context.SaveChangesAsync();
                 return Ok();
             }

@@ -27,7 +27,7 @@ namespace HillStructuresAPI.Controllers
             _context = context;
         }
 
-        // GET api/clients
+        // GET api/Clients/get
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [HttpGet("Get")]
@@ -44,15 +44,16 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
+        // GET api/Clients/get/2
         [EnableCors("AllowAll")]
         [Produces("application/json")]
-        [HttpGet("get/{userId}")]
-        public async Task<IActionResult> Get(int userId)
+        [HttpGet("get/{userID}")]
+        public async Task<IActionResult> Get(int userID)
         {
             try
             {
-                var product = _context.Client.SingleOrDefault(p => p.UserID == userId);
-                return Ok(product);
+                var client = _context.Client.SingleOrDefault(p => p.UserID == userID);
+                return Ok(client);
             }
             catch (Exception e)
             {
@@ -60,6 +61,8 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
+
+        // POST api/Clients/create
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [Consumes("application/json")]
@@ -78,6 +81,7 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
+        // PUT api/Clients/update
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [Consumes("application/json")]
@@ -97,13 +101,14 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
+        // DELETE api/Clients/delete/3
         [EnableCors("AllowAll")]
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("delete/{userID}")]
+        public async Task<IActionResult> Delete(int userID)
         {
             try
             {
-                _context.Remove(_context.Client.Find(id));
+                _context.Remove(_context.Client.Find(userID));
                 await _context.SaveChangesAsync();
                 return Ok();
             }

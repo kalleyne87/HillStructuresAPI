@@ -9,24 +9,114 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 using HillStructuresAPI.Models;
 
 
 namespace HillStructuresAPI.Controllers
 {
-    public class SubContractorsController : Controller
+    [Route("api/SubContractor")]
+    public class SubContractorsController : ControllerBase
     {
         private readonly HillStructuresContext _context;
-        private readonly SignInManager<SuperUser> _signInManager;             
 
-        public SubContractorsController(HillStructuresContext context,
-                                        SignInManager<SuperUser> signInManager)
+        public SubContractorsController(HillStructuresContext context)
         {
-            _context = context;
-            _signInManager = signInManager;              
+            _context = context;            
         }
 
-        // GET: SubContractors
+        // GET api/Subcontractors/get
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var subcontractor = _context.SubContractor.ToList();
+                return Ok(subcontractor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET api/Subcontractors/get/2
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get/{CompanyID}")]
+        public async Task<IActionResult> Get(int CompanyID)
+        {
+            try
+            {
+                var subcontractor = _context.SubContractor.SingleOrDefault(p => p.CompanyID == CompanyID);
+                return Ok(subcontractor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // POST api/Subcontractors/create
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] SubContractor subcontractor)
+        {
+            try
+            {
+                _context.SubContractor.Add(subcontractor);
+                _context.SaveChanges();
+                return Ok(subcontractor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // PUT api/Subcontractors/update
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] SubContractor subcontractor)
+        {
+            try
+            {
+                _context.Entry(subcontractor).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                return Ok(subcontractor);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+
+            }
+        }
+
+        // DELETE api/Subcontractors/delete/4
+        [EnableCors("AllowAll")]
+        [HttpDelete("Delete/{CompanyID}")]
+        public async Task<IActionResult> Delete(int CompanyID)
+        {
+            try
+            {
+                _context.Remove(_context.SubContractor.Find(CompanyID));
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+
+        /*// GET: SubContractors
         public async Task<IActionResult> Index()
         {
             if(_signInManager.IsSignedIn(User))
@@ -602,6 +692,6 @@ namespace HillStructuresAPI.Controllers
                 }     
             } 
             return Json(new SelectList(weeks, "WeekID", "WeekName"));
-        }
+        }*/
     }
 }

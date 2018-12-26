@@ -6,23 +6,112 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 using HillStructuresAPI.Models;
 
 namespace HillStructuresAPI.Controllers
 {
-    public class JobsController : Controller
+    [Route("api/Jobs")]
+    public class JobsController : ControllerBase
     {
-        private readonly HillStructuresContext _context;
-        private readonly SignInManager<SuperUser> _signInManager;        
+        private readonly HillStructuresContext _context;      
 
-        public JobsController(HillStructuresContext context,
-                              SignInManager<SuperUser> signInManager)
+        public JobsController(HillStructuresContext context)
         {
             _context = context;
-            _signInManager = signInManager; 
         }
 
-        // GET: Jobs
+        // GET api/Jobs/get
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var jobs = _context.Job.ToList();
+                return Ok(jobs);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET api/Jobs/get/2
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get/{jobID}")]
+        public async Task<IActionResult> Get(int jobID)
+        {
+            try
+            {
+                var job = _context.Job.SingleOrDefault(p => p.JobID == jobID);
+                return Ok(job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // POST api/Jobs/create
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] Job job)
+        {
+            try
+            {
+                _context.Job.Add(job);
+                _context.SaveChanges();
+                return Ok(job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // PUT api/Jobs/update
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] Job job)
+        {
+            try
+            {
+                _context.Entry(job).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                return Ok(job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+
+            }
+        }
+
+        // DELETE api/Jobs/delete/4
+        [EnableCors("AllowAll")]
+        [HttpDelete("Delete/{JobID}")]
+        public async Task<IActionResult> Delete(int jobID)
+        {
+            try
+            {
+                _context.Remove(_context.Job.Find(jobID));
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        /*// GET: Jobs
         public async Task<IActionResult> Index()
         {
             if(_signInManager.IsSignedIn(User))
@@ -904,6 +993,6 @@ namespace HillStructuresAPI.Controllers
                 }
             }
             return Math.Round(total);
-        }
+        }*/
     }
 }

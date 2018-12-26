@@ -9,39 +9,123 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 using HillStructuresAPI.Models;
 
 
 namespace HillStructuresAPI.Controllers
 {
-    public class SuppliersController : Controller
+    [Route("api/Supplier")]
+    public class SuppliersController : ControllerBase
     {
-        private readonly HillStructuresContext _context;
-        private readonly SignInManager<SuperUser> _signInManager;                
+        private readonly HillStructuresContext _context;               
 
-        public SuppliersController(HillStructuresContext context,
-                                    SignInManager<SuperUser> signInManager)
+        public SuppliersController(HillStructuresContext context)
         {
-            _context = context;
-            _signInManager = signInManager;              
+            _context = context;            
         }
 
-        // GET: Suppliers
-        public async Task<IActionResult> Index()
+        // GET api/Suppliers/get
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
         {
-            if(_signInManager.IsSignedIn(User))
-            {              
-                var suppliers = await _context.Supplier.ToListAsync();
-                
-                foreach (var supplier in suppliers)
-                {
-                    loadingSupplierJobs(supplier);
-                }
-                return View(suppliers);
-            } else 
+            try
             {
-                return RedirectToAction("Login", "Account");                
-            }                    
+                var suppliers = _context.Supplier.ToList();
+                return Ok(suppliers);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET api/Suppliers/get/2
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get/{CompanyID}")]
+        public async Task<IActionResult> Get(int CompanyID)
+        {
+            try
+            {
+                var supplier = _context.Supplier.SingleOrDefault(p => p.CompanyID == CompanyID);
+                return Ok(supplier);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // POST api/Suppliers/create
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] Supplier supplier)
+        {
+            try
+            {
+                _context.Supplier.Add(supplier);
+                _context.SaveChanges();
+                return Ok(supplier);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // PUT api/Suppliers/update
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] Supplier supplier)
+        {
+            try
+            {
+                _context.Entry(supplier).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                return Ok(supplier);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+
+            }
+        }
+
+        // DELETE api/Suppliers/delete/4
+        [EnableCors("AllowAll")]
+        [HttpDelete("Delete/{CompanyID}")]
+        public async Task<IActionResult> Delete(int CompanyID)
+        {
+            try
+            {
+                _context.Remove(_context.Supplier.Find(CompanyID));
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+
+        /*// GET: Suppliers
+        public async Task<IActionResult> Index()
+        {             
+            var suppliers = await _context.Supplier.ToListAsync();
+                
+            foreach (var supplier in suppliers)
+            {
+                loadingSupplierJobs(supplier);
+            }
+            return View(suppliers);                   
         }
 
         // GET: Suppliers/Details/5
@@ -602,6 +686,6 @@ namespace HillStructuresAPI.Controllers
                 psd.PaymentSheetDetails = _context.PaymentSheetDetails.Where(ps => ps.PaymentSheetID == psd.PaymentSheetID).ToList();
             }
             return supplier;
-        }
+        }*/
     }
 }

@@ -9,24 +9,113 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Cors;
 using HillStructuresAPI.Models;
 
 
 namespace HillStructuresAPI.Controllers
 {
-    public class EmployeesController : Controller
+    [Route("api/Employees")]
+    public class EmployeesController : ControllerBase
     {
-        private readonly HillStructuresContext _context;
-        private readonly SignInManager<SuperUser> _signInManager;        
+        private readonly HillStructuresContext _context;  
 
-        public EmployeesController(HillStructuresContext context,
-                                   SignInManager<SuperUser> signInManager)
+        public EmployeesController(HillStructuresContext context)
         {
-            _context = context;
-            _signInManager = signInManager;            
+            _context = context;        
         }
 
-        // GET: Employees
+        // GET api/Employees/get
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var employees = _context.Employee.ToList();
+                return Ok(employees);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // GET api/Employees/get/2
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [HttpGet("Get/{userID}")]
+        public async Task<IActionResult> Get(int userID)
+        {
+            try
+            {
+                var employee = _context.Employee.SingleOrDefault(p => p.UserID == userID);
+                return Ok(employee);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // POST api/Employees/create
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] Employee employee)
+        {
+            try
+            {
+                _context.Employee.Add(employee);
+                _context.SaveChanges();
+                return Ok(employee);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        // PUT api/Employees/update
+        [EnableCors("AllowAll")]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] Employee employee)
+        {
+            try
+            {
+                _context.Entry(employee).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+                return Ok(employee);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+
+            }
+        }
+
+        // DELETE api/Employees/delete/4
+        [EnableCors("AllowAll")]
+        [HttpDelete("Delete/{UserID}")]
+        public async Task<IActionResult> Delete(int userID)
+        {
+            try
+            {
+                _context.Remove(_context.Employee.Find(userID));
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        /*// GET: Employees
         public async Task<IActionResult> Index()
         {
             if(_signInManager.IsSignedIn(User))
@@ -617,6 +706,6 @@ namespace HillStructuresAPI.Controllers
         {
             var timesheetdetails = _context.TimeSheetDetails.Where(t => t.TimeSheetID == timesheet.TimeSheetID).ToList();
             return timesheetdetails;
-        }
+        }*/
     }
 }

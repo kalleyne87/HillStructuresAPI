@@ -15,18 +15,18 @@ using HillStructuresAPI.Models;
 
 namespace HillStructuresAPI.Controllers
 {
-    [Route("api/TimeSheet")]
-    public class TimeSheetsController : ControllerBase
+    [Route("api/TimeSheetDetail")]
+    public class TimeSheetsDetailsController : ControllerBase
     {
 
         private readonly HillStructuresContext _context;          
 
-        public TimeSheetsController(HillStructuresContext context)
+        public TimeSheetsDetailsController(HillStructuresContext context)
         {
             _context = context;       
         }
 
-        // GET api/timesheets/get
+        // GET api/timesheetdetails/get
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [HttpGet("Get")]
@@ -34,8 +34,8 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var timesheets = _context.TimeSheets.ToList();
-                return Ok(timesheets);
+                var timesheetdetails = _context.TimeSheetDetails.ToList();
+                return Ok(timesheetdetails);
             }
             catch (Exception e)
             {
@@ -43,16 +43,16 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // GET api/timesheets/get/2
+        // GET api/timesheetdetails/get/2
         [EnableCors("AllowAll")]
         [Produces("application/json")]
-        [HttpGet("Get/{TimeSheetID}")]
-        public async Task<IActionResult> Get(int TimeSheetID)
+        [HttpGet("Get/{TimeSheetDetailID}")]
+        public async Task<IActionResult> Get(int TimeSheetDetailID)
         {
             try
             {
-                var timesheet = _context.TimeSheets.SingleOrDefault(p => p.TimeSheetID == TimeSheetID);
-                return Ok(timesheet);
+                var timesheetdetail = _context.TimeSheetDetails.SingleOrDefault(p => p.TimeSheetDetailID == TimeSheetDetailID);
+                return Ok(timesheetdetail);
             }
             catch (Exception e)
             {
@@ -60,18 +60,18 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // POST api/timesheets/create
+        // POST api/timesheetdetails/create
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] TimeSheet timeSheet)
+        public async Task<IActionResult> Create([FromBody] TimeSheetDetail timeSheetDetail)
         {
             try
             {
-                _context.TimeSheets.Add(timeSheet);
+                _context.TimeSheetDetails.Add(timeSheetDetail);
                 _context.SaveChanges();
-                return Ok(timeSheet);
+                return Ok(timeSheetDetail);
             }
             catch (Exception e)
             {
@@ -79,18 +79,18 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // PUT api/timesheets/update
+        // PUT api/timesheetdetails/update
         [EnableCors("AllowAll")]
         [Produces("application/json")]
         [Consumes("application/json")]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] TimeSheet timeSheet)
+        public async Task<IActionResult> Update([FromBody] TimeSheetDetail timeSheetDetail)
         {
             try
             {
-                _context.Entry(timeSheet).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Entry(timeSheetDetail).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 _context.SaveChanges();
-                return Ok(timeSheet);
+                return Ok(timeSheetDetail);
             }
             catch (Exception e)
             {
@@ -99,14 +99,14 @@ namespace HillStructuresAPI.Controllers
             }
         }
 
-        // DELETE api/timesheets/delete/4
+        // DELETE api/timesheetdetails/delete/4
         [EnableCors("AllowAll")]
-        [HttpDelete("Delete/{TimeSheetID}")]
-        public async Task<IActionResult> Delete(int TimeSheetID)
+        [HttpDelete("Delete/{TimeSheetDetailID}")]
+        public async Task<IActionResult> Delete(int TimeSheetDetailID)
         {
             try
             {
-                _context.Remove(_context.TimeSheets.Find(TimeSheetID));
+                _context.Remove(_context.TimeSheetDetails.Find(TimeSheetDetailID));
                 await _context.SaveChangesAsync();
                 return Ok();
             }
@@ -115,7 +115,6 @@ namespace HillStructuresAPI.Controllers
                 return BadRequest(e);
             }
         }
-
 
         /*// GET: TimeSheet/Delete/5
         public async Task<IActionResult> Delete(int? id)
