@@ -11,7 +11,7 @@ using HillStructuresAPI.Models;
 
 namespace HillStructuresAPI.Controllers
 {
-    [Route("api/Jobs")]
+    [Route("api/Job")]
     public class JobsController : ControllerBase
     {
         private readonly HillStructuresContext _context;      

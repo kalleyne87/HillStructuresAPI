@@ -11,5 +11,5 @@ namespace HillStructuresAPI.Models
         public string Role { get; set; }
         public ICollection<EmployeeJob> EmployeeJobs {get; set;}
         public ICollection<TimeSheet> TimeSheets { get; set; }
-    }
+    } 
 }

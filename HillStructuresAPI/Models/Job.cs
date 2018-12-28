@@ -23,7 +23,9 @@ namespace HillStructuresAPI.Models
         [Display(Name = "Cost Estimate")]
         [DataType(DataType.Currency)]
         public decimal CostEstimate { get; set; }
+        public int ClientID { get; set; }
 
+        [ForeignKey("ClientID")]
         public Client Client { get; set; }
         public ICollection<TimeSheet> TimeSheets { get; set; }
         public ICollection<EmployeeJob> EmployeeJobs {get; set;}

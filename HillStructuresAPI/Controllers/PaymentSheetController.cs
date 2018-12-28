@@ -15,7 +15,7 @@ using HillStructuresAPI.Models;
 
 namespace HillStructuresAPI.Controllers
 {
-    [Route("api/PaymentSheets")]
+    [Route("api/PaymentSheet")]
     public class PaymentSheetsController : ControllerBase
     {
 
