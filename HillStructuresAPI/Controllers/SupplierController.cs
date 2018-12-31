@@ -33,7 +33,10 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var suppliers = _context.Supplier.ToList();
+                var suppliers = _context.Supplier
+                    .Include(s => s.PaymentSheets)
+                    .Include(s => s.SupplierJobs)
+                    .ToList();
                 return Ok(suppliers);
             }
             catch (Exception e)

@@ -35,7 +35,7 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var clients = _context.Client.ToList();
+                var clients = _context.Client.Include(c => c.Jobs).ToList();
                 return Ok(clients);
             }
             catch (Exception e)
@@ -52,7 +52,8 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var client = _context.Client.SingleOrDefault(p => p.UserID == userID);
+                var client = _context.Client.Include(c => c.Jobs)
+                    .SingleOrDefault(p => p.UserID == userID);
                 return Ok(client);
             }
             catch (Exception e)

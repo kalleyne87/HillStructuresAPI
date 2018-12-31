@@ -34,7 +34,11 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var paymentSheets = _context.PaymentSheets.ToList();
+                var paymentSheets = _context.PaymentSheets
+                    .Include(ps => ps.Company)
+                    .Include(ps => ps.Job)
+                    .Include(ps => ps.PaymentSheetDetails)
+                    .ToList();
                 return Ok(paymentSheets);
             }
             catch (Exception e)
@@ -51,7 +55,11 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var paymentSheet = _context.PaymentSheets.SingleOrDefault(p => p.PaymentSheetID == PaymentSheetID);
+                var paymentSheet = _context.PaymentSheets
+                    .Include(ps => ps.Company)
+                    .Include(ps => ps.Job)
+                    .Include(ps => ps.PaymentSheetDetails)
+                    .SingleOrDefault(p => p.PaymentSheetID == PaymentSheetID);
                 return Ok(paymentSheet);
             }
             catch (Exception e)

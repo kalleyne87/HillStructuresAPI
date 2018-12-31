@@ -34,7 +34,9 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var timesheetdetails = _context.TimeSheetDetails.ToList();
+                var timesheetdetails = _context.TimeSheetDetails
+                    .Include(tsd => tsd.TimeSheet)
+                    .ToList();
                 return Ok(timesheetdetails);
             }
             catch (Exception e)

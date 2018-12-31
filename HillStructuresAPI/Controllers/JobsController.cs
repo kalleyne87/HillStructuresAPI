@@ -29,7 +29,13 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var jobs = _context.Job.ToList();
+                var jobs = _context.Job
+                    .Include(j => j.TimeSheets)
+                    .Include(j => j.EmployeeJobs)
+                    .Include(j => j.SupplierJobs)
+                    .Include(j => j.SubContractorJobs)
+                    .Include(j => j.Client)
+                    .ToList();
                 return Ok(jobs);
             }
             catch (Exception e)
@@ -46,7 +52,13 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var job = _context.Job.SingleOrDefault(p => p.JobID == jobID);
+                var job = _context.Job
+                    .Include(j => j.TimeSheets)
+                    .Include(j => j.EmployeeJobs)
+                    .Include(j => j.SupplierJobs)
+                    .Include(j => j.SubContractorJobs)
+                    .Include(j => j.Client)
+                    .SingleOrDefault(p => p.JobID == jobID);
                 return Ok(job);
             }
             catch (Exception e)

@@ -33,7 +33,10 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var employees = _context.Employee.ToList();
+                var employees = _context.Employee
+                    .Include(e => e.EmployeeJobs)
+                    .Include(e => e.TimeSheets)
+                    .ToList();
                 return Ok(employees);
             }
             catch (Exception e)
@@ -50,7 +53,10 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var employee = _context.Employee.SingleOrDefault(p => p.UserID == userID);
+                var employee = _context.Employee
+                    .Include(e => e.EmployeeJobs)
+                    .Include(e => e.TimeSheets)
+                    .SingleOrDefault(p => p.UserID == userID);
                 return Ok(employee);
             }
             catch (Exception e)

@@ -34,7 +34,11 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var timesheets = _context.TimeSheets.ToList();
+                var timesheets = _context.TimeSheets
+                    .Include(ts => ts.Employee)
+                    .Include(ts => ts.Job)
+                    .Include(ts => ts.TimeSheetDetails)
+                    .ToList();
                 return Ok(timesheets);
             }
             catch (Exception e)
@@ -51,7 +55,11 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var timesheet = _context.TimeSheets.SingleOrDefault(p => p.TimeSheetID == TimeSheetID);
+                var timesheet = _context.TimeSheets
+                    .Include(ts => ts.Employee)
+                    .Include(ts => ts.Job)
+                    .Include(ts => ts.TimeSheetDetails)
+                    .SingleOrDefault(p => p.TimeSheetID == TimeSheetID);
                 return Ok(timesheet);
             }
             catch (Exception e)

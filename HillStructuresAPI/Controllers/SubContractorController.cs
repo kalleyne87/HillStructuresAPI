@@ -33,7 +33,10 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var subcontractor = _context.SubContractor.ToList();
+                var subcontractor = _context.SubContractor
+                    .Include(s => s.PaymentSheets)
+                    .Include(s => s.SubContractorJobs)
+                    .ToList();
                 return Ok(subcontractor);
             }
             catch (Exception e)
@@ -50,7 +53,10 @@ namespace HillStructuresAPI.Controllers
         {
             try
             {
-                var subcontractor = _context.SubContractor.SingleOrDefault(p => p.CompanyID == CompanyID);
+                var subcontractor = _context.SubContractor
+                    .Include(s => s.PaymentSheets)
+                    .Include(s => s.SubContractorJobs)
+                    .SingleOrDefault(p => p.CompanyID == CompanyID);
                 return Ok(subcontractor);
             }
             catch (Exception e)
